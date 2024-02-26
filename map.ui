@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>598</width>
+    <width>667</width>
     <height>446</height>
    </rect>
   </property>
@@ -90,7 +90,7 @@
      <rect>
       <x>364</x>
       <y>410</y>
-      <width>221</width>
+      <width>291</width>
       <height>23</height>
      </rect>
     </property>
@@ -98,8 +98,59 @@
      <string>Поиск</string>
     </property>
    </widget>
+   <widget class="QRadioButton" name="mapButton">
+    <property name="geometry">
+     <rect>
+      <x>593</x>
+      <y>10</y>
+      <width>82</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Карта</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QRadioButton" name="satButton">
+    <property name="geometry">
+     <rect>
+      <x>593</x>
+      <y>55</y>
+      <width>82</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Спутник</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QRadioButton" name="hybridButton">
+    <property name="geometry">
+     <rect>
+      <x>593</x>
+      <y>100</y>
+      <width>82</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Гибрид</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
   </widget>
  </widget>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
 </ui>

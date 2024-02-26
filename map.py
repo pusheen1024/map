@@ -14,6 +14,10 @@ class Map(QMainWindow):
         uic.loadUi('map.ui', self)
         self.api = API()
         self.searchButton.clicked.connect(self.search)
+        for button in self.buttonGroup.buttons():
+            button.clicked.connect(self.change_type)
+        self.mapButton.setChecked(True)
+        self.search()
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_PageUp:
@@ -39,6 +43,16 @@ class Map(QMainWindow):
         except UnidentifiedImageError:
             self.statusBar().showMessage('Возникла ошибка при работе с API!')
 
+    def change_type(self):
+        if self.sender().text() == 'Карта':
+            map_type = 'map'
+        if self.sender().text() == 'Спутник':
+            map_type = 'sat'
+        if self.sender().text() == 'Гибрид':
+            map_type = 'sat,skl'
+        self.api.change_type(map_type)
+        self.search()
+
 
 class API:
     def __init__(self):
@@ -51,9 +65,15 @@ class API:
         response = requests.get(self.api_server, params=self.params)
         return response.content
 
+    def change_type(self, map_type):
+        self.type = map_type
+
     def change_scale(self, incr):
-        if incr > 0 and self.z < 15 or incr < 0 and self.z > 0:
+        if incr > 0 and self.z < 15 or incr < 0 and self.z > 1:
             self.z += incr
+
+    def move(self):
+        pass
 
 
 def except_hook(cls, exception, traceback):
