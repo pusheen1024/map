@@ -24,13 +24,13 @@ class Map(QMainWindow):
             self.api.change_scale(1)
         elif event.key() == Qt.Key_PageDown:
             self.api.change_scale(-1)
-        elif event.key() == Qt.Key_W:
-            self.api.move_map(0, 1)
         elif event.key() == Qt.Key_S:
+            self.api.move_map(0, 1)
+        elif event.key() == Qt.Key_W:
             self.api.move_map(0, -1)
-        elif event.key() == Qt.Key_A:
-            self.api.move_map(1, 0)
         elif event.key() == Qt.Key_D:
+            self.api.move_map(1, 0)
+        elif event.key() == Qt.Key_A:
             self.api.move_map(-1, 0)
         self.search(new_search=False)
 
@@ -72,9 +72,10 @@ class API:
     def search_by_coords(self, lon, lat, new_search=True):
         if new_search:
             self.lon, self.lat = lon, lat
-        self.params = {'l': self.type, 'll': ','.join([str(self.lon), str(self.lat)]), 'z': self.z}
+        self.params = {'l': self.type, 'll': ','.join([str(self.lon), str(self.lat)]),
+                       'z': self.z, 'size': '500,300'}
         response = requests.get(self.api_server, params=self.params)
-        return response.content    
+        return response.content
 
     def change_type(self, map_type):
         self.type = map_type
@@ -84,8 +85,9 @@ class API:
             self.z += incr
 
     def move_map(self, dx, dy):
-        self.lon += dx * self.lon_size / 2 ** (self.z - 1)
-        self.lat += dy * self.lat_size / 2 ** (self.z - 1)
+        self.lon = (self.lon + dx * self.lon_size / 2 ** (self.z - 1)) % 180
+        self.lat = (self.lat + dy * self.lat_size / 2 ** (self.z - 1)) % 90
+
 
 def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
