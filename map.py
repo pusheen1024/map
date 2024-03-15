@@ -13,25 +13,20 @@ class Map(QMainWindow):
         super().__init__()
         uic.loadUi('map.ui', self)
         self.api = API()
-        self.searchButton.clicked.connect(self.search)
         for button in self.buttonGroup.buttons():
             button.clicked.connect(self.change_type)
         self.mapButton.setChecked(True)
-        self.search()
+        self.searchButton.clicked.connect(lambda: self.search(new_search=True))
+        self.search(new_search=True)
 
     def keyPressEvent(self, event):
+        deltas = {Qt.Key_S: (0, -1), Qt.Key_W: (0, 1), Qt.Key_D: (1, 0), Qt.Key_A: (-1, 0)}
         if event.key() == Qt.Key_PageUp:
             self.api.change_scale(1)
         elif event.key() == Qt.Key_PageDown:
             self.api.change_scale(-1)
-        elif event.key() == Qt.Key_S:
-            self.api.move_map(0, 1)
-        elif event.key() == Qt.Key_W:
-            self.api.move_map(0, -1)
-        elif event.key() == Qt.Key_D:
-            self.api.move_map(1, 0)
-        elif event.key() == Qt.Key_A:
-            self.api.move_map(-1, 0)
+        elif event.key() in deltas.keys():
+            self.api.move_map(*deltas[event.key()])
         self.search(new_search=False)
 
     def wheelEvent(self, event):
@@ -39,17 +34,18 @@ class Map(QMainWindow):
             self.api.change_scale(1)
         elif event.angleDelta().y() < 0:
             self.api.change_scale(-1)
-        self.search()
+        self.search(new_search=False)
 
-    def search(self, new_search=True):
+    def search(self, new_search):
         lon = self.longitude.value()
         lat = self.latitude.value()
         try:
             result = self.api.search_by_coords(lon, lat, new_search)
             Image.open(BytesIO(result)).save('temp.png')
             self.mapLabel.setPixmap(QPixmap('temp.png'))
+            self.statusBar.showMessage('')
         except UnidentifiedImageError:
-            self.statusBar().showMessage('Возникла ошибка при работе с API!')
+            self.statusBar.showMessage('Возникла ошибка при работе с API!')
 
     def change_type(self):
         if self.sender().text() == 'Карта':
@@ -59,21 +55,24 @@ class Map(QMainWindow):
         if self.sender().text() == 'Гибрид':
             map_type = 'sat,skl'
         self.api.change_type(map_type)
-        self.search()
+        self.search(new_search=False)
 
 
 class API:
     def __init__(self):
         self.api_server = "http://static-maps.yandex.ru/1.x/"
         self.lon_size, self.lat_size = 180, 90
+        self.x_size, self.y_size = 600, 360
         self.z = 12
         self.type = 'map'
 
     def search_by_coords(self, lon, lat, new_search=True):
         if new_search:
             self.lon, self.lat = lon, lat
-        self.params = {'l': self.type, 'll': ','.join([str(self.lon), str(self.lat)]),
-                       'z': self.z, 'size': '500,300'}
+        self.params = {'l': self.type, 
+                       'll': ','.join([str(self.lon), str(self.lat)]),
+                       'z': self.z, 
+                       'size': ','.join([str(self.x_size), str(self.y_size)])}
         response = requests.get(self.api_server, params=self.params)
         return response.content
 
@@ -85,8 +84,10 @@ class API:
             self.z += incr
 
     def move_map(self, dx, dy):
-        self.lon = (self.lon + dx * self.lon_size / 2 ** (self.z - 1)) % 180
-        self.lat = (self.lat + dy * self.lat_size / 2 ** (self.z - 1)) % 90
+        self.lon = self.lon + dx * self.lon_size / 2 ** (self.z - 1)
+        self.lat = self.lat + dy * self.lat_size / 2 ** (self.z - 1)
+        self.lon = -abs(self.lon % 90) if self.lon < 0 else self.lon % 90
+        self.lat = -abs(self.lat % 90) if self.lat < 0 else self.lat % 90
 
 
 def except_hook(cls, exception, traceback):

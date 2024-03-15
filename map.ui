@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>667</width>
-    <height>446</height>
+    <height>462</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,6 +39,12 @@
     <property name="decimals">
      <number>4</number>
     </property>
+    <property name="minimum">
+     <double>-80.000000000000000</double>
+    </property>
+    <property name="maximum">
+     <double>80.000000000000000</double>
+    </property>
    </widget>
    <widget class="QDoubleSpinBox" name="longitude">
     <property name="geometry">
@@ -53,10 +59,10 @@
      <number>4</number>
     </property>
     <property name="minimum">
-     <double>-100.000000000000000</double>
+     <double>-90.000000000000000</double>
     </property>
     <property name="maximum">
-     <double>100.000000000000000</double>
+     <double>90.000000000000000</double>
     </property>
    </widget>
    <widget class="QLabel" name="label_1">
@@ -147,6 +153,7 @@
     </attribute>
    </widget>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <resources/>
  <connections/>
