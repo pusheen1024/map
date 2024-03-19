@@ -45,6 +45,7 @@ class Map(QMainWindow):
             if not result:
                 self.statusBar.showMessage('Объект не найден!')
                 return
+            self.addressField.setText(self.api.get_address())
         else:
             lon = self.longitude.value()
             lat = self.latitude.value()
@@ -58,6 +59,7 @@ class Map(QMainWindow):
 
     def clear(self):
         self.api.clear_result()
+        self.addressField.setText('')
         self.search(new_search=False)
 
     def change_type(self):
@@ -99,6 +101,7 @@ class API:
         try:
             response = requests.get(self.geocoder_server, params=geocoder_params).json()
             toponym = response["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]
+            self.address = toponym["metaDataProperty"]["GeocoderMetaData"]["Address"]["formatted"]
             lon, lat = map(float, toponym["Point"]["pos"].split())
             self.clear_result()
             self.points.append((lon, lat))
@@ -108,6 +111,9 @@ class API:
 
     def clear_result(self):
         self.points.clear()
+        
+    def get_address(self):
+        return self.address    
 
     def change_type(self, map_type):
         self.type = map_type
