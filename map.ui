@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>598</width>
-    <height>446</height>
+    <width>667</width>
+    <height>487</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,20 +31,7 @@
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>410</y>
-      <width>91</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="decimals">
-     <number>4</number>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="longitude">
-    <property name="geometry">
-     <rect>
-      <x>241</x>
-      <y>410</y>
+      <y>440</y>
       <width>91</width>
       <height>22</height>
      </rect>
@@ -53,17 +40,36 @@
      <number>4</number>
     </property>
     <property name="minimum">
-     <double>-100.000000000000000</double>
+     <double>-80.000000000000000</double>
     </property>
     <property name="maximum">
-     <double>100.000000000000000</double>
+     <double>80.000000000000000</double>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="longitude">
+    <property name="geometry">
+     <rect>
+      <x>241</x>
+      <y>440</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="decimals">
+     <number>4</number>
+    </property>
+    <property name="minimum">
+     <double>-90.000000000000000</double>
+    </property>
+    <property name="maximum">
+     <double>90.000000000000000</double>
     </property>
    </widget>
    <widget class="QLabel" name="label_1">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>410</y>
+      <y>440</y>
       <width>47</width>
       <height>21</height>
      </rect>
@@ -76,7 +82,7 @@
     <property name="geometry">
      <rect>
       <x>180</x>
-      <y>410</y>
+      <y>440</y>
       <width>47</width>
       <height>21</height>
      </rect>
@@ -85,21 +91,96 @@
      <string>Долгота</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="searchButton">
+   <widget class="QPushButton" name="coordsSearch">
     <property name="geometry">
      <rect>
-      <x>364</x>
-      <y>410</y>
-      <width>221</width>
+      <x>350</x>
+      <y>440</y>
+      <width>141</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
-     <string>Поиск</string>
+     <string>Поиск по координатам</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="mapButton">
+    <property name="geometry">
+     <rect>
+      <x>593</x>
+      <y>10</y>
+      <width>82</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Карта</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QRadioButton" name="satButton">
+    <property name="geometry">
+     <rect>
+      <x>593</x>
+      <y>55</y>
+      <width>82</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Спутник</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QRadioButton" name="hybridButton">
+    <property name="geometry">
+     <rect>
+      <x>593</x>
+      <y>100</y>
+      <width>82</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Гибрид</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QLineEdit" name="placeName">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>400</y>
+      <width>641</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="nameSearch">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>440</y>
+      <width>141</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Поиск по названию</string>
     </property>
    </widget>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
 </ui>
