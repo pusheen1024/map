@@ -111,9 +111,9 @@ class API:
 
     def clear_result(self):
         self.points.clear()
-        
+
     def get_address(self):
-        return self.address    
+        return self.address
 
     def change_type(self, map_type):
         self.type = map_type
