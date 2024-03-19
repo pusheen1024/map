@@ -46,7 +46,7 @@ class Map(QMainWindow):
             if not result:
                 self.statusBar.showMessage('Объект не найден!')
                 return
-            self.addressList.addItem(self.api.get_address())
+            self.addressList.addItem(self.api.get_addresses()[-1])
         else:
             lon = self.longitude.value()
             lat = self.latitude.value()
@@ -58,6 +58,11 @@ class Map(QMainWindow):
         except UnidentifiedImageError:
             self.statusBar.showMessage('Возникла ошибка при работе с API!')
 
+    def show_addresses(self):
+        self.addressList.clear()
+        for item in self.api.get_addresses():
+            self.addressList.addItem(item)
+
     def clear(self):
         self.api.clear_result()
         self.addressList.clear()
@@ -65,6 +70,7 @@ class Map(QMainWindow):
 
     def show_index(self):
         self.api.display_index(self.showIndex.isChecked())
+        self.show_addresses()
 
     def change_type(self):
         if self.sender().text() == 'Карта':
@@ -84,10 +90,10 @@ class API:
         self.lon_size, self.lat_size = 180, 90
         self.x_size, self.y_size = 600, 360
         self.z = 12
-        self.points = list()
-        self.postal_code = ''
-        self.show_index = False
         self.type = 'map'
+        self.points = list()
+        self.addresses = list()
+        self.show_index = False
 
     def search_by_coords(self, lon, lat, new_search=True):
         if new_search:
@@ -108,14 +114,19 @@ class API:
             response = requests.get(self.geocoder_server, params=geocoder_params).json()
             toponym = response["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]
             address = toponym["metaDataProperty"]["GeocoderMetaData"]["Address"]
-            self.address = address["formatted"]
-            if self.show_index and "postal_code" in address:
-                self.postal_code = address["postal_code"]
+            self.addresses.append((address["formatted"], address.get("postal_code", None)))
             lon, lat = map(float, toponym["Point"]["pos"].split())
             self.points.append((lon, lat))
             return self.search_by_coords(lon, lat, new_search=True)
         except (KeyError, IndexError):
             pass
+
+    def get_addresses(self):
+        if self.show_index:
+            return [(address, f'{address}, {postal_code}')[bool(postal_code)]
+                    for address, postal_code in self.addresses]
+        else:
+            return [address for address, _ in self.addresses]
 
     def clear_result(self):
         self.points.clear()
@@ -135,9 +146,6 @@ class API:
         self.lat = self.lat + dy * self.lat_size / 2 ** (self.z - 1)
         self.lon = -abs(self.lon % 90) if self.lon < 0 else self.lon % 90
         self.lat = -abs(self.lat % 90) if self.lat < 0 else self.lat % 90
-
-    def get_address(self):
-        return f'{self.address} {self.postal_code}'
 
 
 def except_hook(cls, exception, traceback):
